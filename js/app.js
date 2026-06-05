@@ -392,6 +392,9 @@ function openGameDetails(gameId, homeId, awayId) {
   document.getElementById("homepage-views-container").classList.add("hidden");
   document.getElementById("game-detail-container").classList.remove("hidden");
 
+  // Close mobile sidebar if open
+  closeMobileSidebar();
+
   // Scroll main container to top
   document.querySelector(".main-content-area").scrollTop = 0;
 }
@@ -407,6 +410,9 @@ function backToHub() {
   
   advisorManager.loadWatchlist();
   updateTelemetryCounters();
+
+  // Close mobile sidebar if open
+  closeMobileSidebar();
 }
 
 // Render Bookmakers comparisons inside detailed pane
@@ -1038,6 +1044,9 @@ window.showToolView = function(toolId) {
   const toolsContainer = document.getElementById("tools-views-container");
   if (toolsContainer) toolsContainer.classList.remove("hidden");
 
+  // Close mobile sidebar if open
+  closeMobileSidebar();
+
   const titleEl = document.getElementById("tools-view-title");
   const headerEl = document.getElementById("tools-table-header");
   const bodyEl = document.getElementById("tools-table-body");
@@ -1353,4 +1362,32 @@ window.openGameDetailsFromAlert = function(leagueKey, homeId, awayId) {
     // Fallback if game is not in schedule
     openGameDetails(homeId + "_" + awayId, homeId, awayId);
   }
+};
+
+// =================================================================
+// 11. RESPONSIVE MOBILE SIDEBAR LOGIC
+// =================================================================
+window.toggleMobileSidebar = function() {
+  const sidebar = document.querySelector(".oddsnotifier-sidebar");
+  const backdrop = document.getElementById("mobile-sidebar-backdrop");
+  if (!sidebar || !backdrop) return;
+
+  const isOpen = sidebar.classList.toggle("open");
+  if (isOpen) {
+    backdrop.classList.add("active");
+    document.body.style.overflow = "hidden"; // Prevent scrolling behind drawer
+  } else {
+    backdrop.classList.remove("active");
+    document.body.style.overflow = "";
+  }
+};
+
+window.closeMobileSidebar = function() {
+  const sidebar = document.querySelector(".oddsnotifier-sidebar");
+  const backdrop = document.getElementById("mobile-sidebar-backdrop");
+  if (!sidebar || !backdrop) return;
+
+  sidebar.classList.remove("open");
+  backdrop.classList.remove("active");
+  document.body.style.overflow = "";
 };

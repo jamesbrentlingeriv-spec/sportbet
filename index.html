@@ -120,6 +120,9 @@
     <!-- LEFT SIDEBAR: OddsNotifier styled -->
     <aside class="oddsnotifier-sidebar">
       <div class="sidebar-header">
+        <button id="mobile-sidebar-close" class="mobile-sidebar-close" onclick="toggleMobileSidebar()" aria-label="Close Sidebar">
+          <i class="fas fa-times"></i>
+        </button>
         <div class="logo-box-hub" style="cursor: pointer;" onclick="backToHub()">
           <span class="logo-title">ODDSNOTIFIER</span>
           <span class="logo-badge">Hub</span>
@@ -188,6 +191,15 @@
       
       <!-- TOP UTILITY BAR (Search, format toggle, settings, profile) -->
       <div class="top-utility-bar">
+        <button id="mobile-sidebar-toggle" class="mobile-sidebar-toggle" onclick="toggleMobileSidebar()" aria-label="Toggle Sidebar">
+          <i class="fas fa-bars"></i>
+        </button>
+        
+        <div class="mobile-logo-header" onclick="backToHub()">
+          <span class="logo-title">ODDSNOTIFIER</span>
+          <span class="logo-badge">Hub</span>
+        </div>
+
         <div class="search-box-wrapper-wide">
           <i class="fas fa-search search-icon"></i>
           <input type="text" id="matchup-search-input" placeholder="Search team matchups or leagues..." oninput="handleSearchFilter()" />
@@ -510,5 +522,8 @@
   <script src="js/advisor.js"></script>
   <script src="js/charts.js"></script>
   <script src="js/app.js"></script>
+
+  <!-- Mobile Sidebar Backdrop Overlay -->
+  <div id="mobile-sidebar-backdrop" class="mobile-sidebar-backdrop" onclick="toggleMobileSidebar()"></div>
 </body>
 </html>

@@ -2369,3 +2369,194 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+/* =================================================================
+   11. MOBILE DRAWER & RESPONSIVENESS (<= 768px)
+   ================================================================== */
+.mobile-sidebar-toggle {
+  display: none;
+}
+.mobile-logo-header {
+  display: none;
+}
+.mobile-sidebar-close {
+  display: none;
+}
+.mobile-sidebar-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  z-index: 1999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.mobile-sidebar-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (max-width: 768px) {
+  /* Toggle buttons display */
+  .mobile-sidebar-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    background: #0f1013;
+    border: 1px solid var(--border-light);
+    color: var(--text-primary);
+    border-radius: 8px;
+    font-size: 1.15rem;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+  }
+  .mobile-sidebar-toggle:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .mobile-logo-header {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    cursor: pointer;
+    margin-right: auto;
+  }
+  .mobile-logo-header .logo-title {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+  }
+  .mobile-logo-header .logo-badge {
+    font-size: 0.55rem;
+    background: var(--neon-cyan-dim);
+    color: var(--neon-cyan);
+    padding: 0.1rem 0.3rem;
+    border-radius: 4px;
+    border: 1px solid rgba(0, 210, 255, 0.2);
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .mobile-sidebar-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 1rem;
+    right: 1.25rem;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.25rem;
+    cursor: pointer;
+    z-index: 2005;
+  }
+  .mobile-sidebar-close:hover {
+    color: #ffffff;
+  }
+
+  /* Sidebar Drawer styling */
+  .oddsnotifier-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    height: 100vh;
+    z-index: 2000;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.8);
+    border-right: 1px solid var(--border-light);
+  }
+  .oddsnotifier-sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Adjust Main Content Area */
+  .main-content-area {
+    padding: 1rem 0.75rem;
+  }
+
+  /* Top Utility Bar responsive wrapping */
+  .top-utility-bar {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .search-box-wrapper-wide {
+    order: 2;
+    width: 100%;
+    max-width: 100%;
+  }
+  .top-bar-actions {
+    order: 1;
+    margin-left: auto;
+    gap: 0.5rem;
+  }
+
+  /* Profile card details hidden on mobile */
+  .header-profile-card .profile-details {
+    display: none;
+  }
+  .header-profile-card {
+    padding: 0.35rem;
+    width: 38px;
+    height: 38px;
+    justify-content: center;
+  }
+
+  /* Hide "Odds:" label in format selector to save space */
+  .odds-toggle-group span {
+    display: none;
+  }
+  .odds-toggle-btn {
+    padding: 0.35rem 0.65rem;
+    font-size: 0.7rem;
+  }
+
+  /* Match details header positioning and look */
+  .detail-nav-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+  .detail-nav-row .back-hub-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .detail-nav-row .scrape-odds-wrapper {
+    width: 100%;
+  }
+  .detail-nav-row .scrape-odds-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .active-game-header-bar {
+    text-align: center;
+    order: -1;
+    margin-bottom: 0.25rem;
+  }
+  .detail-game-title {
+    font-size: 1.05rem;
+  }
+
+  /* Tables padding adjustments */
+  .odds-portal-grid-table th, 
+  .odds-portal-grid-table td {
+    padding: 0.6rem 0.5rem;
+  }
+  .odds-portal-grid-table {
+    font-size: 0.7rem;
+  }
+}
+
+
