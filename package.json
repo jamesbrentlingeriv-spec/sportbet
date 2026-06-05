@@ -1,0 +1,21 @@
+{
+  "name": "apexpredict-sportsbook",
+  "version": "1.0.0",
+  "description": "Premium Sports Betting Predictor Dashboard Terminal",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx -y http-server -p 3000 -c-1"
+  },
+  "keywords": [
+    "sportsbook",
+    "betting",
+    "predictor",
+    "analytics",
+    "ev"
+  ],
+  "author": "Antigravity",
+  "license": "MIT",
+  "dependencies": {
+    "playwright": "^1.60.0"
+  }
+}

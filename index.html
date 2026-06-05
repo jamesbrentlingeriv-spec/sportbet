@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vox Fortuna - High-Density Sports Odds Comparison Hub</title>
+  <meta name="description" content="Professional-grade real-time sports betting odds comparison comparison desk. Replicating OddsNotifier Hub with absolute black theme, athletic yellow highlights, dropping alerts and AI projections.">
+  <meta name="theme-color" content="#000000">
+  
+  <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Favicons & Manifest -->
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="manifest" href="site.webmanifest">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+  
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- =================================================================
+       SPLASH SCREEN / ACCOUNT ONBOARDING OVERLAY
+  ================================================================== -->
+  <div id="splash-onboarding-overlay" class="splash-overlay active">
+    <div class="splash-container">
+      <div class="splash-logo-box">
+        <i class="fas fa-satellite-dish splash-neon-icon"></i>
+        <h2>Vox Fortuna Hub</h2>
+        <span class="splash-tag">Odds comparison & AI Projections</span>
+      </div>
+
+      <div class="splash-card">
+        <h3>Create Your Account</h3>
+        <p class="splash-subtitle">Access professional bookmaker comparisons, line tracking, and AI indicators.</p>
+        
+        <form id="splash-form" onsubmit="handleAuthSubmit(event)">
+          <div class="splash-input-group">
+            <label for="splash-email"><i class="far fa-envelope"></i> Email Address</label>
+            <input type="email" id="splash-email" required placeholder="name@domain.com" class="splash-input" />
+          </div>
+
+          <div class="splash-input-group">
+            <label for="splash-password"><i class="fas fa-lock"></i> Password</label>
+            <input type="password" id="splash-password" required placeholder="••••••••" class="splash-input" />
+          </div>
+
+          <!-- OpenRouter API Credentials -->
+          <div class="splash-input-group margin-t-2">
+            <div class="label-with-tooltip">
+              <label for="splash-or-key"><i class="fas fa-key"></i> OpenRouter API Key <span class="optional-tag">(Optional)</span></label>
+              <span class="tooltip-trigger" title="Input your OpenRouter key to connect actual AI models to fetch custom news articles and rationale text! Leave blank for fallback local simulation."><i class="far fa-question-circle"></i></span>
+            </div>
+            <input type="password" id="splash-or-key" placeholder="sk-or-v1-..." class="splash-input" />
+          </div>
+
+          <div class="splash-input-group">
+            <label for="splash-or-model"><i class="fas fa-robot"></i> Selected LLM Model</label>
+            <select id="splash-or-model" class="splash-select">
+              <option value="openrouter/free">Auto-Select Best Free Model</option>
+              <option value="google/gemini-2.5-flash">Google: Gemini 2.5 Flash</option>
+              <option value="meta-llama/llama-3.3-70b-instruct:free">Llama 3.3 70B Instruct (Free)</option>
+              <option value="deepseek/deepseek-r1:free">DeepSeek R1 (Free)</option>
+            </select>
+          </div>
+
+          <button type="submit" class="splash-submit-btn">
+            ENTER TRADING DESK <i class="fas fa-arrow-right"></i>
+          </button>
+        </form>
+      </div>
+
+      <p class="splash-footer-notes">© 2026 Vox Fortuna Hub. Credentials and keys are saved securely and locally in your browser cache.</p>
+    </div>
+  </div>
+
+  <!-- settings model drawer -->
+  <div id="settings-modal" class="settings-modal">
+    <div class="settings-card">
+      <div class="settings-header">
+        <h4><i class="fas fa-cog neon-green-text"></i> API Credentials</h4>
+        <button class="settings-close-btn" onclick="toggleSettingsModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="settings-body flex-col gap-4">
+        <p class="panel-description">Update your OpenRouter API settings to alter AI model parameters in real time.</p>
+        <div class="splash-input-group">
+          <label for="settings-or-key"><i class="fas fa-key"></i> OpenRouter API Key</label>
+          <input type="password" id="settings-or-key" placeholder="sk-or-v1-..." class="splash-input" />
+        </div>
+        <div class="splash-input-group">
+          <label for="settings-or-model"><i class="fas fa-robot"></i> Selected Model</label>
+          <select id="settings-or-model" class="splash-select">
+            <option value="openrouter/free">Auto-Select Best Free Model</option>
+            <option value="google/gemini-2.5-flash">Google: Gemini 2.5 Flash</option>
+            <option value="meta-llama/llama-3.3-70b-instruct:free">Llama 3.3 70B Instruct (Free)</option>
+            <option value="deepseek/deepseek-r1:free">DeepSeek R1 (Free)</option>
+          </select>
+        </div>
+        <button class="place-wager-btn" onclick="saveSettingsUpdates()">UPDATE SETTINGS</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================================================================
+       MAIN TERMINAL SYSTEM PANEL
+  ================================================================== -->
+  <!-- =================================================================
+       MAIN TERMINAL SYSTEM PANEL
+  ================================================================== -->
+  <div class="main-layout-wrapper">
+    
+    <!-- LEFT SIDEBAR: OddsNotifier styled -->
+    <aside class="oddsnotifier-sidebar">
+      <div class="sidebar-header">
+        <div class="logo-box-hub" style="cursor: pointer;" onclick="backToHub()">
+          <span class="logo-title">ODDSNOTIFIER</span>
+          <span class="logo-badge">Hub</span>
+        </div>
+        <p class="logo-subtitle">Premium Odds Hub</p>
+      </div>
+
+      <div class="live-feed-bar">
+        <span class="live-indicator"><span class="dot"></span> Live Feed</span>
+        <button id="sidebar-signin-btn" class="sidebar-signin-btn" onclick="openSignIn()"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+        <span id="sidebar-user-status" class="sidebar-user-status hidden">Signed In</span>
+      </div>
+
+      <!-- Trophy Card -->
+      <div class="sidebar-trophy-card" style="cursor: pointer;" onclick="switchLeague('epl')">
+        <div class="trophy-card-content">
+          <span class="trophy-cup">🏆</span>
+          <div class="trophy-text">
+            <h4>FIFA WORLD CUP 2026</h4>
+            <p>Groups - Fixtures - Live Odds</p>
+          </div>
+          <div class="trophy-badge-days">
+            <span class="badge-new">NEW</span>
+            <span class="days-text">5d<br>TO GO</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tools Section -->
+      <div class="sidebar-section">
+        <h5 class="section-title">TOOLS</h5>
+        <div class="section-links">
+          <a href="#" class="sidebar-link" id="tool-link-dropping" onclick="showToolView('dropping')"><i class="fas fa-chart-line"></i> Dropping Odds</a>
+          <a href="#" class="sidebar-link" id="tool-link-value" onclick="showToolView('value')"><i class="fas fa-percentage"></i> Value Bets</a>
+          <a href="#" class="sidebar-link" id="tool-link-arbitrage" onclick="showToolView('arbitrage')"><i class="fas fa-scale-balanced"></i> Arbitrage</a>
+        </div>
+      </div>
+
+      <!-- Sports Section -->
+      <div class="sidebar-section">
+        <h5 class="section-title">SPORTS</h5>
+        <div class="section-links" id="sidebar-sports-list">
+          <a href="#" class="sidebar-link sport-item" id="sport-link-epl" onclick="switchLeague('epl')"><i class="fas fa-futbol"></i> Football <i class="fas fa-chevron-right caret-right"></i></a>
+          <a href="#" class="sidebar-link sport-item active" id="sport-link-nba" onclick="switchLeague('nba')"><i class="fas fa-basketball-ball"></i> Basketball <i class="fas fa-chevron-right caret-right"></i></a>
+          <a href="#" class="sidebar-link sport-item" id="sport-link-nfl" onclick="switchLeague('nfl')"><i class="fas fa-football-ball"></i> American Football <i class="fas fa-chevron-right caret-right"></i></a>
+          <a href="#" class="sidebar-link sport-item" id="sport-link-tennis" onclick="switchLeague('tennis')"><i class="fas fa-table-tennis"></i> Tennis <i class="fas fa-chevron-right caret-right"></i></a>
+          <a href="#" class="sidebar-link sport-item" id="sport-link-hockey" onclick="switchLeague('hockey')"><i class="fas fa-hockey-puck"></i> Ice Hockey <i class="fas fa-chevron-right caret-right"></i></a>
+          <a href="#" class="sidebar-link sport-item" id="sport-link-athletics" onclick="switchLeague('athletics')"><i class="fas fa-running"></i> Athletics <i class="fas fa-chevron-right caret-right"></i></a>
+          <a href="#" class="sidebar-link sport-item" id="sport-link-aussie" onclick="switchLeague('aussie')"><i class="fas fa-rugby-ball"></i> Aussie Rules <i class="fas fa-chevron-right caret-right"></i></a>
+          <a href="#" class="sidebar-link sport-item" id="sport-link-badminton" onclick="switchLeague('badminton')"><i class="fas fa-feather"></i> Badminton <i class="fas fa-chevron-right caret-right"></i></a>
+        </div>
+      </div>
+
+      <!-- Saved Watchlist inside left sidebar (maintaining existing feature) -->
+      <div class="sidebar-section margin-t-4">
+        <h5 class="section-title"><i class="far fa-star"></i> WATCHLIST</h5>
+        <div class="panel-body flex-col gap-3" id="watchlist-items-list" style="overflow-y: auto; max-height: 200px; padding: 0.5rem 0;">
+          <!-- Injected from advisor.js -->
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- RIGHT/MAIN CONTENT CONTAINER -->
+    <main class="main-content-area">
+      
+      <!-- TOP UTILITY BAR (Search, format toggle, settings, profile) -->
+      <div class="top-utility-bar">
+        <div class="search-box-wrapper-wide">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" id="matchup-search-input" placeholder="Search team matchups or leagues..." oninput="handleSearchFilter()" />
+        </div>
+
+        <div class="top-bar-actions">
+          <div class="odds-toggle-group">
+            <span>Odds:</span>
+            <button id="toggle-odds-american" class="odds-toggle-btn active" onclick="setOddsFormat('american')">American</button>
+            <button id="toggle-odds-decimal" class="odds-toggle-btn" onclick="setOddsFormat('decimal')">Decimal</button>
+          </div>
+
+          <div class="header-profile-card">
+            <div class="profile-avatar">
+              <div class="avatar-letter-box" id="profile-letter-logo">VF</div>
+              <span class="active-badge"></span>
+            </div>
+            <div class="profile-details">
+              <h4 class="profile-name" id="nav-profile-name">Vox User</h4>
+              <span class="profile-sub-stats" id="nav-profile-email" style="font-size: 0.65rem; color: var(--text-secondary);">Guest Mode</span>
+            </div>
+          </div>
+
+          <button id="open-settings-btn" class="icon-utility-btn" onclick="toggleSettingsModal()" title="API Settings"><i class="fas fa-key"></i></button>
+          <button id="logout-btn" class="icon-utility-btn" onclick="handleAuthLogout()" title="Log Out"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+      </div>
+
+      <!-- 1. HOMEPAGE VIEWS CONTAINER (Three Columns from screenshot) -->
+      <div id="homepage-views-container" class="home-columns-grid">
+        
+        <!-- COLUMN 1: TOP FIXTURES -->
+        <section class="home-column card-panel">
+          <div class="panel-header border-b">
+            <h3><span class="column-icon">🏆</span> Top Fixtures <span class="badge-count yellow" id="top-fixtures-count">10</span></h3>
+          </div>
+          <div class="panel-body list-container" id="home-top-fixtures-list">
+            <!-- Injected from app.js -->
+          </div>
+        </section>
+
+        <!-- COLUMN 2: DROPPING ODDS -->
+        <section class="home-column card-panel">
+          <div class="panel-header border-b flex-row justify-between align-center">
+            <h3><span class="column-icon">📉</span> Dropping Odds <span class="badge-count red" id="dropping-odds-count">10</span></h3>
+            <span class="delayed-sign-in"><i class="far fa-clock"></i> Delayed - Sign in for live</span>
+          </div>
+          <div class="panel-body list-container" id="home-dropping-odds-list">
+            <!-- Injected from app.js -->
+          </div>
+          <div class="panel-footer-link">
+            <a href="#" onclick="showDroppingOddsFilter()">View all drops <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </section>
+
+        <!-- COLUMN 3: LEAGUES / CUSTOMIZE -->
+        <section class="home-column card-panel leagues-column">
+          <div class="panel-header border-b">
+            <h3><span class="column-icon">💜</span> Leagues</h3>
+          </div>
+          <div class="panel-body flex-col align-center justify-center leagues-empty-state">
+            <div class="heart-icon-wrapper">
+              <i class="far fa-heart"></i>
+            </div>
+            <p class="leagues-prompt-text">Follow leagues to customize your hub</p>
+            <button class="leagues-signin-btn" onclick="openSignIn()"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- 2. GAME DETAIL COMPARISON VIEW CONTAINER (Hidden by default, shown on click) -->
+      <div id="game-detail-container" class="game-detail-layout hidden">
+        
+        <!-- Back navigation row -->
+        <div class="detail-nav-row">
+          <button class="back-hub-btn" onclick="backToHub()"><i class="fas fa-arrow-left"></i> Back to Odds Hub</button>
+          
+          <div class="active-game-header-bar">
+            <div class="sport-breadcrumb" id="detail-sport-breadcrumb">Basketball - USA - NBA</div>
+            <h2 class="detail-game-title" id="detail-game-title">San Antonio Spurs vs New York Knicks</h2>
+            <div class="detail-game-date" id="detail-game-date">Wed, June 3 - 8:30 PM</div>
+          </div>
+
+          <!-- Live Odds Scrape Button -->
+          <div class="scrape-odds-wrapper">
+            <button class="scrape-odds-btn" id="scrape-odds-btn" onclick="triggerWebOddsScrape()">
+              <i class="fas fa-sync-alt"></i> Scrape Live Web Odds
+            </button>
+          </div>
+        </div>
+
+        <!-- Scraping Terminal log -->
+        <div id="odds-scrape-terminal" class="terminal-log-overlay hidden">
+          <!-- Injected dynamically -->
+        </div>
+
+        <div class="detail-grid-wrapper">
+          <!-- Main details center (Bookies grid, player props, news scanner) -->
+          <div class="detail-left-column">
+            
+            <!-- Bookmakers Odds Grid -->
+            <div class="card-panel">
+              <div class="panel-header border-b">
+                <h3><i class="fas fa-th-list neon-green-text"></i> Sportsbook Live Odds comparison Grid</h3>
+                <div class="bookie-toggles-row">
+                  <label class="custom-checkbox-container-inline">
+                    <input type="checkbox" id="chk-bookie-pinnacle" checked onchange="toggleBookmakerColumn('pinnacle')" />
+                    <span class="checkmark"></span> Pinnacle
+                  </label>
+                  <label class="custom-checkbox-container-inline">
+                    <input type="checkbox" id="chk-bookie-bet365" checked onchange="toggleBookmakerColumn('bet365')" />
+                    <span class="checkmark"></span> Bet365
+                  </label>
+                  <label class="custom-checkbox-container-inline">
+                    <input type="checkbox" id="chk-bookie-sbobet" checked onchange="toggleBookmakerColumn('sbobet')" />
+                    <span class="checkmark"></span> SBOBet
+                  </label>
+                  <label class="custom-checkbox-container-inline">
+                    <input type="checkbox" id="chk-bookie-draftkings" checked onchange="toggleBookmakerColumn('draftkings')" />
+                    <span class="checkmark"></span> DraftKings
+                  </label>
+                </div>
+              </div>
+              <div class="panel-body overflow-x" style="padding:0;">
+                <table class="odds-portal-grid-table">
+                  <thead>
+                    <tr>
+                      <th>Bookmaker</th>
+                      <th>Home Moneyline</th>
+                      <th class="col-draw-header" id="detail-draw-header">Draw ML</th>
+                      <th>Away Moneyline</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="bookies-comparison-table-body">
+                    <!-- Injected dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- AI Player Props Section -->
+            <div class="card-panel margin-t-4">
+              <div class="panel-header border-b">
+                <h3><i class="fas fa-running neon-green-text"></i> Player Props & Projections (+EV Picks)</h3>
+                <span class="badge bg-green-dim text-green-400">Player Sets Tracker</span>
+              </div>
+              <div class="panel-body">
+                <div class="player-props-grid" id="player-props-container">
+                  <!-- Injected dynamically -->
+                </div>
+              </div>
+            </div>
+
+            <!-- AI News & Sentiment Scanner -->
+            <div class="card-panel margin-t-4">
+              <div class="panel-header border-b">
+                <h3><i class="fas fa-rss neon-green-text"></i> AI News Search & Sentiment Scanner</h3>
+                <button class="ai-scan-news-btn" onclick="triggerNewsScanner()">
+                  <i class="fas fa-search-plus"></i> SCAN RECENT NEWS
+                </button>
+              </div>
+              <div class="panel-body flex-col relative" style="min-height: 220px;">
+                <div id="ai-search-terminal" class="ai-search-terminal hidden"></div>
+                <div id="ai-news-feed-container" class="flex-col flex-grow"></div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Sidebar details right (Gauge, vector tuners, advisor, ratings comparison) -->
+          <div class="detail-right-column flex-col gap-6">
+            
+            <!-- Gauge -->
+            <div class="card-panel">
+              <div class="panel-header border-b">
+                <h3><i class="fas fa-brain neon-green-text"></i> Predictive Simulator Probability</h3>
+              </div>
+              <div class="panel-body flex-col align-center gap-4">
+                <div class="gauge-visualization-container" style="margin: 0.5rem 0;">
+                  <div class="gauge-svg-wrapper">
+                    <svg class="prediction-gauge-svg" viewBox="0 0 200 120">
+                      <defs>
+                        <linearGradient id="gauge-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stop-color="#ef4444" />
+                          <stop offset="25%" stop-color="#f97316" />
+                          <stop offset="50%" stop-color="#facc15" />
+                          <stop offset="75%" stop-color="#00d2ff" />
+                          <stop offset="100%" stop-color="#ffe600" />
+                        </linearGradient>
+                      </defs>
+                      <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="14" stroke-linecap="round" />
+                      <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="url(#gauge-gradient)" stroke-width="14" stroke-linecap="round" />
+                      <path id="gauge-active-track" d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#0a0a0c" stroke-width="16" stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="125" style="transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1);" />
+                    </svg>
+                    <div class="gauge-center-content">
+                      <span class="gauge-value text-yellow-active" id="gauge-probability-pct">--</span>
+                      <span class="gauge-caption" id="gauge-probability-label">Home Win Prob</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="gauge-metrics-breakdown" style="width:100%;">
+                  <div class="breakdown-row">
+                    <span class="indicator-dot bg-neon-green"></span>
+                    <span>Home Win Probability:</span>
+                    <strong id="metric-home-prob">--</strong>
+                  </div>
+                  <div id="draw-probability-row" class="breakdown-row" style="display:none;">
+                    <span class="indicator-dot bg-neon-cyan"></span>
+                    <span>Draw Probability:</span>
+                    <strong id="metric-draw-prob">--</strong>
+                  </div>
+                  <div class="breakdown-row">
+                    <span class="indicator-dot bg-neon-rose"></span>
+                    <span>Away Win Probability:</span>
+                    <strong id="metric-away-prob">--</strong>
+                  </div>
+                  <div class="breakdown-row margin-t-2">
+                    <span class="indicator-dot bg-neon-orange"></span>
+                    <span>Value Opportunity:</span>
+                    <strong id="metric-value-grade" class="neon-orange-text">--</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Vector Tuners -->
+            <div class="card-panel">
+              <div class="panel-header border-b">
+                <h3><i class="fas fa-sliders-h neon-green-text"></i> Matchup Vector Tuners</h3>
+                <button class="reset-sliders-btn" onclick="resetSliders()"><i class="fas fa-redo-alt"></i> Calibrate</button>
+              </div>
+              <div class="panel-body flex-col gap-4">
+                <div class="slider-container">
+                  <div class="slider-header"><span>Stadium Advantage</span><strong id="val-home-adv" class="slider-readout">0</strong></div>
+                  <input type="range" id="slider-home-adv" min="-10" max="10" value="0" class="neon-slider" oninput="handleSliderUpdate()" />
+                </div>
+                <div class="slider-container">
+                  <div class="slider-header"><span>Roster Form Curve</span><strong id="val-form" class="slider-readout">0</strong></div>
+                  <input type="range" id="slider-form" min="-10" max="10" value="0" class="neon-slider" oninput="handleSliderUpdate()" />
+                </div>
+                <div class="slider-container">
+                  <div class="slider-header"><span>Roster Health Factor</span><strong id="val-injuries" class="slider-readout">0</strong></div>
+                  <input type="range" id="slider-injuries" min="-10" max="10" value="0" class="neon-slider" oninput="handleSliderUpdate()" />
+                </div>
+                <div class="slider-container">
+                  <div class="slider-header"><span>Weather/Climate Factor</span><strong id="val-weather" class="slider-readout">0</strong></div>
+                  <input type="range" id="slider-weather" min="-10" max="10" value="0" class="neon-slider" oninput="handleSliderUpdate()" />
+                </div>
+                <div class="slider-container">
+                  <div class="slider-header"><span>Coaching/Tactics Match</span><strong id="val-tactics" class="slider-readout">0</strong></div>
+                  <input type="range" id="slider-tactics" min="-10" max="10" value="0" class="neon-slider" oninput="handleSliderUpdate()" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Radar / Margins Chart -->
+            <div class="card-panel">
+              <div class="panel-header border-b">
+                <h3><i class="fas fa-chart-bar text-zinc-400"></i> Ratings Comparison</h3>
+                <div class="chart-tab-group">
+                  <button class="chart-tab-btn active" id="btn-chart-radar" onclick="switchChartTab('radar')">Radar</button>
+                  <button class="chart-tab-btn" id="btn-chart-bar" onclick="switchChartTab('bar')">Margins</button>
+                </div>
+              </div>
+              <div class="panel-body relative chart-frame-height flex justify-center align-center">
+                <div class="chart-canvas-wrapper" id="radar-chart-wrapper">
+                  <canvas id="offense-defense-chart"></canvas>
+                </div>
+                <div class="chart-canvas-wrapper hidden" id="bar-chart-wrapper">
+                  <canvas id="h2h-chart"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- AI Strategy Report -->
+            <div class="card-panel">
+              <div class="panel-header border-b">
+                <h3><i class="fas fa-lightbulb neon-green-text"></i> AI Strategic Advisory Report</h3>
+              </div>
+              <div class="panel-body" id="ai-advisor-panel-container" style="padding: 1rem;">
+                <!-- Injected from advisor.js -->
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 3. TOOLS VIEW CONTAINER (Initially hidden, shown on click) -->
+      <div id="tools-views-container" class="card-panel hidden" style="padding: 1.5rem; background: var(--bg-panel-solid); margin-top: 0;">
+        <div class="detail-nav-row" style="border-bottom: 1px solid var(--border-light); padding-bottom: 1rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; width: 100%;">
+          <button class="back-hub-btn" onclick="backToHub()"><i class="fas fa-arrow-left"></i> Back to Odds Hub</button>
+          <h2 id="tools-view-title" class="detail-game-title" style="margin: 0; font-size: 1.25rem;">Value Bets Projections</h2>
+          <div style="width: 120px;"></div> <!-- Spacer -->
+        </div>
+        <div class="panel-body overflow-x" style="padding: 0;">
+          <table class="odds-portal-grid-table">
+            <thead id="tools-table-header">
+              <!-- Injected dynamically -->
+            </thead>
+            <tbody id="tools-table-body">
+              <!-- Injected dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- JavaScript Application Modules -->
+  <script src="js/openrouter.js"></script>
+  <script src="js/database.js"></script>
+  <script src="js/predictor.js"></script>
+  <script src="js/news.js"></script>
+  <script src="js/advisor.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
