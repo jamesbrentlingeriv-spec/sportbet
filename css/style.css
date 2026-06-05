@@ -1632,6 +1632,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .sidebar-header {
   margin-bottom: 1.25rem;
+  position: relative;
 }
 
 .logo-box-hub {
@@ -2449,17 +2450,23 @@ h1, h2, h3, h4, h5, h6 {
     align-items: center;
     justify-content: center;
     position: absolute;
-    top: 1rem;
-    right: 1.25rem;
-    background: transparent;
-    border: none;
-    color: var(--text-secondary);
-    font-size: 1.25rem;
+    top: 0.15rem;
+    right: 0;
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-light);
+    color: #ffffff;
+    border-radius: 50%;
+    font-size: 0.85rem;
     cursor: pointer;
     z-index: 2005;
+    transition: var(--transition-smooth);
   }
   .mobile-sidebar-close:hover {
-    color: #ffffff;
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--neon-lime);
+    border-color: rgba(255, 230, 0, 0.25);
   }
 
   /* Sidebar Drawer styling */
