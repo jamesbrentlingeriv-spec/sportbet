@@ -2400,7 +2400,7 @@ h1, h2, h3, h4, h5, h6 {
   pointer-events: auto;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   /* Toggle buttons display */
   .mobile-sidebar-toggle {
     display: flex;
